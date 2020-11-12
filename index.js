@@ -1,7 +1,12 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
+
+
 app.use(express.json())
+app.use(express.static('build'))
+app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 morgan.token('data', function(req, res) {
@@ -113,6 +118,7 @@ let persons = [
       res.send(`<p>Phonebook has info for ${persons.length} people </p>
       <p>${Date()}</p>`)
   })
+
   app.get('/api/persons/:id', (req,res) =>{
       const id = Number(req.params.id)
       const person = persons.find(person => person.id === id)
@@ -124,6 +130,7 @@ let persons = [
           res.status(404).end()
       }
   })
+
   app.delete('/api/persons/:id', (req,res) =>{
       const id = Number(req.params.id)
       const person = persons.find(person => person.id === id)
@@ -136,7 +143,8 @@ let persons = [
         res.status(404).end()
       }
   })
-  const PORT = 3001
+
+  const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
       console.log(`server is listening on port ${PORT}`)
   })
