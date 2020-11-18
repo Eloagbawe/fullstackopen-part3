@@ -1,8 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const dotenv = require('dotenv')
+dotenv.config()
+const Person = require('./models/person.js')
 const app = express()
-
 
 app.use(express.json())
 app.use(express.static('build'))
@@ -104,14 +106,14 @@ let persons = [
     
         persons = persons.concat(newName)
         res.json(newName)
-      }
-
-      
-      
+      }  
       
   })
-  app.get('/api/persons', (req,res) => {
+
+  app.get('/api/persons', (req, res) => {
+    Person.find({}).then(persons => {
       res.json(persons)
+    })
   })
 
   app.get('/info', (req,res) =>{
@@ -144,7 +146,7 @@ let persons = [
       }
   })
 
-  const PORT = process.env.PORT || 3001
+  const PORT = process.env.PORT
   app.listen(PORT, () => {
       console.log(`server is listening on port ${PORT}`)
   })
