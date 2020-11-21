@@ -38,8 +38,12 @@ app.post('/api/persons',(req,res) =>{
         })
     
         newName.save().then(person =>{
-          res.json(person)
+          return person.toJSON()
         })
+        .then(savedAndFormattedPerson => {
+          response.json(savedAndFormattedPerson)
+        }) 
+        .catch(error => next(error)) 
       }  
       
   })
@@ -100,6 +104,9 @@ app.post('/api/persons',(req,res) =>{
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
     } 
+    else if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
+    }
   
     next(error)
   }
