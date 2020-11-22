@@ -16,7 +16,7 @@ morgan.token('data', function(req, res) {
 
 });
 
-app.post('/api/persons',(req,res) =>{
+app.post('/api/persons',(req,res,next) =>{
       const body = req.body
       
       if (!body.name){
@@ -41,7 +41,7 @@ app.post('/api/persons',(req,res) =>{
           return person.toJSON()
         })
         .then(savedAndFormattedPerson => {
-          response.json(savedAndFormattedPerson)
+          res.json(savedAndFormattedPerson)
         }) 
         .catch(error => next(error)) 
       }  
@@ -55,7 +55,7 @@ app.post('/api/persons',(req,res) =>{
   })
 
   app.get('/info', (req,res) => {
-      Person.find({}).then(persons =>{
+      Person.find({}).then(persons => {
         res.send(`<p>Phonebook has info for ${persons.length} people </p>
       <p>${Date()}</p>`)
       })
